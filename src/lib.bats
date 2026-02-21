@@ -4,14 +4,15 @@
 
 #use array as A
 #use wasm.bats-packages.dev/bridge as B
+#use result as R
 
 #pub fun get_url
   {l:agz}{n:pos}
-  (out: !$A.arr(byte, l, n), max_len: int n): int
+  (out: !$A.arr(byte, l, n), max_len: int n): $R.result(int)
 
 #pub fun get_hash
   {l:agz}{n:pos}
-  (out: !$A.arr(byte, l, n), max_len: int n): int
+  (out: !$A.arr(byte, l, n), max_len: int n): $R.result(int)
 
 #pub fun set_hash
   {lb:agz}{n:nat}
@@ -25,11 +26,19 @@
   {lb:agz}{n:nat}
   (url: !$A.borrow(byte, lb, n), url_len: int n): void
 
-implement get_url{l}{n}(out, max_len) =
-  $B.get_url(out, max_len)
+implement get_url{l}{n}(out, max_len) = let
+  val bytes_written = $B.get_url(out, max_len)
+in
+  if bytes_written > 0 then $R.ok(bytes_written)
+  else $R.err(0)
+end
 
-implement get_hash{l}{n}(out, max_len) =
-  $B.get_hash(out, max_len)
+implement get_hash{l}{n}(out, max_len) = let
+  val bytes_written = $B.get_hash(out, max_len)
+in
+  if bytes_written > 0 then $R.ok(bytes_written)
+  else $R.err(0)
+end
 
 implement set_hash{lb}{n}(hash, hash_len) =
   $B.set_hash(hash, hash_len)
