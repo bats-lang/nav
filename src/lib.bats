@@ -40,3 +40,11 @@ implement replace_state{lb}{n}(url, url_len) =
 
 implement push_state{lb}{n}(url, url_len) =
   $B.push_state(url, url_len)
+
+(* Register callback for browser back/forward navigation.
+   Callback receives URL length. Read URL bytes with stash_read(buf, 1, len). *)
+#pub fun on_navigate
+  (cb: (int) -<cloref1> int): void
+
+implement on_navigate(cb) =
+  $B.set_popstate_callback(cb)
