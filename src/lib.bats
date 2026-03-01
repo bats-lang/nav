@@ -48,3 +48,7 @@ implement push_state{lb}{n}(url, url_len) =
 
 implement on_navigate(cb) =
   $B.set_popstate_callback(cb)
+
+#pub fun reload(): void
+
+implement reload() = $B.reload()
